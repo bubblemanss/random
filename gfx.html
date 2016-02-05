@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Hello World</title>
+    </head>
+    <body>
+        <div id="container"></div>
+    </body>
+    <!-- Shaders -->
+    <script type="x-shader/x-vertex" id="vshader">
+        
+        // switch on high precision floats
+        #ifdef GL_ES
+        precision highp float;
+        #endif
+
+        uniform float amplitude;
+        attribute float displacement;
+        varying vec3 vNormal;
+
+        void main()
+        {
+            vNormal = normal;
+            vec3 newPosition = position + normal * vec3(displacement * amplitude);
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
+        }
+        
+    </script>
+    
+    <script type="x-shader/x-fragment" id="fshader">
+    
+        #ifdef GL_ES
+        precision highp float;
+        #endif
+        varying vec3 vNormal;
+        
+        void main()
+        {
+            vec3 light = vec3(0.5, 0.2, 1.0);
+            light = normalize(light);
+            float dProd = max(0.0, dot(vNormal, light));
+            gl_FragColor = vec4(dProd, dProd, dProd, 1.0);
+        }
+    
+    </script>
+    
+    <!-- End Shaders -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="js/script/three.js"></script>
+    <script src="js/script/main.js"></script>
+</html>
